@@ -7,7 +7,14 @@ Amazing tweet_clone!
 {% block content %}
 Welcome to tweet_clone!
 
+<div id='tweets'>
+    replace me
+</div>
+
 <script>
+const tweetsElement = document.getElementById("tweets") // get an html div element
+// tweetsElement.innerHTML = 'Loading...' //set html
+
 const xhr = new XMLHttpRequest()
 const method = 'GET'
 const url = "/tweets"
@@ -18,8 +25,14 @@ xhr.open(method, url)
 xhr.onload = function() {
     console.log(xhr.response)
     const serverResponse = xhr.response
-    var listedItems = serverResponse.response
-    console.log(listedItems)
+    var listedItems = serverResponse.response //array of response's intems
+    var finalTweetStr = ""
+    var i;
+    for (i=0; i<listedItems.length; i++){
+        var currentItem = "<div class='mb-4'><h3>" + listedItems[i].id + "</h3>" + "<p>" + listedItems[i].content + "</p></div>"
+        finalTweetStr += currentItem
+    }
+    tweetsElement.innerHTML = finalTweetStr
 }
 xhr.send()
 
