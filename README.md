@@ -8,6 +8,7 @@ it is my todo list:
 		- image
 	- Delete
 	- Retweeting
+    - Liking
 	
 2. Users
     - register
