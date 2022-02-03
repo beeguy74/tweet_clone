@@ -5,9 +5,15 @@ Amazing tweet_clone!
 {% endblock headtitle %}
 
 {% block content %}
-Welcome to tweet_clone!
 
-<div id='tweets'>
+<div class="row text-center">
+    <div class="col">
+        <h2>Welcome to tweet_clone!</h2>
+    </div>
+</div>
+
+
+<div class="row" id='tweets'>
     replace me
 </div>
 
@@ -31,7 +37,7 @@ function LikeBtn(tweet) {
 }
 
 function formatTweetElement(tweet) {
-    var formattedTweet = "<div class='mb-4 tweet' id=tweet-" + tweet.id +
+    var formattedTweet = "<div class='col-12 col-md-10 mx-auto border rounded py-3 mb-4 tweet' id=tweet-" + tweet.id +
         "'><p>" + tweet.content +
         "</p><div class='btn-group'>" + LikeBtn(tweet) +
         "</div></div>"
