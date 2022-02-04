@@ -34,9 +34,18 @@ function handleTweetCreateFormDidSubmit(event) {
     event.preventDefault()
     const myForm = event.target
     const myFormData = new FormData(myForm)
-    for(var myItem of myFormData.entries()){
-        console.log(myItem)
+    const endpoint = myForm.getAttribute("action")
+    const method = myForm.getAttribute("method")
+
+    const xhr = new XMLHttpRequest()
+    xhr.open(method, endpoint)
+    xhr.onload = function() {
+        const serverResponse = xhr.response
+        console.log(serverResponse)
+        const tweetsEl = document.getElementById("tweets") // get an html div element
+        loadTweets(tweetsEl)//reload tweets without redirect
     }
+    xhr.send(myFormData)
 }
 
 const tweetCreateFormEl = document.getElementById("tweet-create-form")
@@ -55,7 +64,7 @@ function loadTweets(tweetsElement) {
     xhr.responseType = responseType
     xhr.open(method, url)
     xhr.onload = function() {
-        console.log(xhr.response)
+        // console.log(xhr.response)
         const serverResponse = xhr.response
         var listedItems = serverResponse.response //array of response's intems
         var finalTweetStr = ""
