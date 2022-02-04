@@ -31,7 +31,12 @@ Amazing tweet_clone!
 <script>
 
 function handleTweetCreateFormDidSubmit(event) {
-    event.prevetnDefault()
+    event.preventDefault()
+    const myForm = event.target
+    const myFormData = new FormData(myForm)
+    for(var myItem of myFormData.entries()){
+        console.log(myItem)
+    }
 }
 
 const tweetCreateFormEl = document.getElementById("tweet-create-form")
