@@ -42,10 +42,13 @@ function handleTweetCreateFormDidSubmit(event) {
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest") //this header means that request is AJAX form
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")//this header means that request is AJAX form
     xhr.onload = function() {
-        const serverResponse = xhr.response
-        console.log(serverResponse)
-        const tweetsEl = document.getElementById("tweets") // get an html div element
-        loadTweets(tweetsEl)//reload tweets without redirect
+        if (xhr.status === 201){
+            const serverResponse = xhr.response //server sends serialized tweet object
+            //dont reload entire page - just render new tweet 
+            newTweetJson = JSON.parse(serverResponse) //it is necessary cuz i dont set xhr.responseType = "json"
+            const newTweetElement = formatTweetElement(newTweetJson)
+            console.log(newTweetElement)
+        }
     }
     xhr.send(myFormData)
 }
@@ -54,7 +57,7 @@ const tweetCreateFormEl = document.getElementById("tweet-create-form")
 
 tweetCreateFormEl.addEventListener("submit", handleTweetCreateFormDidSubmit)
 
-const tweetsEl = document.getElementById("tweets") // get an html div element
+const tweetsContainerElement = document.getElementById("tweets") // get an html div element
 // tweetsElement.innerHTML = 'Loading...' //set html
 
 function loadTweets(tweetsElement) {
@@ -80,7 +83,7 @@ function loadTweets(tweetsElement) {
     xhr.send()
 }
 
-loadTweets(tweetsEl)
+loadTweets(tweetsContainerElement)
 
 function handleDidLike(tweet_id, currentCount) {
     console.log(tweet_id, currentCount)
