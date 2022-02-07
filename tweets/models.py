@@ -8,6 +8,11 @@ class Tweet(models.Model):
     content = models.TextField(blank=True, null=True)
     image = models.FileField(upload_to='images/', blank=True, null=True)
 
+    # changing meta option gives us a descending order tweets on page
+    # but dont forget makemigrations
+    class Meta:
+        ordering = ['-id']
+
     def serialize(self):
         return {
             "id": self.id,

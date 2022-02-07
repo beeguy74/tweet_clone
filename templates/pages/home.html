@@ -53,6 +53,7 @@ function handleTweetCreateFormDidSubmit(event) {
             console.log(newTweetElement)
             const ogHtml = tweetsContainerElement.innerHTML //twetsContainerElement contain all tweets from our page
             tweetsContainerElement.innerHTML = newTweetElement + ogHtml
+            myForm.reset() //clear new tweet form
         }
     }
     xhr.send(myFormData)
