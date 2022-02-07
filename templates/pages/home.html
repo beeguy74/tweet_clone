@@ -17,7 +17,7 @@ Amazing tweet_clone!
         <form class="form" id="tweet-create-form" method="POST" action="/create-tweet">
             {% csrf_token %}
             <input type="hidden" value="/" name="next" />
-            <textarea class='form-control' name="content" placeholder="Your tweet.."></textarea>
+            <textarea class='form-control' name="content" placeholder="Your tweet.." required="required"></textarea>
             <button type="submit" class="btn btn-primary">Tweet</button>
         </form>
     </div>
@@ -55,6 +55,15 @@ function handleTweetCreateFormDidSubmit(event) {
             tweetsContainerElement.innerHTML = newTweetElement + ogHtml
             myForm.reset() //clear new tweet form
         }
+        else if (xhr.status === 400){
+            const errorJson = xhr.response
+        }
+        else if (xhr.status === 500){
+            alert("There was a swerver error.")
+        }
+    }
+    xhr.onerror = function() {
+        alert("An error occured.")
     }
     xhr.send(myFormData)
 }
