@@ -36,8 +36,10 @@ function handleTweetCreateFormDidSubmit(event) {
     const myFormData = new FormData(myForm)
     const endpoint = myForm.getAttribute("action")
     const method = myForm.getAttribute("method")
+    const responseType = "json"
 
     const xhr = new XMLHttpRequest()
+    xhr.responseType = responseType
     xhr.open(method, endpoint)
     xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest") //this header means that request is AJAX form
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")//this header means that request is AJAX form
@@ -45,9 +47,12 @@ function handleTweetCreateFormDidSubmit(event) {
         if (xhr.status === 201){
             const serverResponse = xhr.response //server sends serialized tweet object
             //dont reload entire page - just render new tweet 
-            newTweetJson = JSON.parse(serverResponse) //it is necessary cuz i dont set xhr.responseType = "json"
+            // newTweetJson = JSON.parse(serverResponse) //it is necessary cuz i dont set xhr.responseType = "json"
+            newTweetJson = serverResponse
             const newTweetElement = formatTweetElement(newTweetJson)
             console.log(newTweetElement)
+            const ogHtml = tweetsContainerElement.innerHTML //twetsContainerElement contain all tweets from our page
+            tweetsContainerElement.innerHTML = newTweetElement + ogHtml
         }
     }
     xhr.send(myFormData)
