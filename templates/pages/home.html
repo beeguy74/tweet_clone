@@ -16,6 +16,9 @@ Amazing tweet_clone!
     <div class="col-md-4 mx-auto col-10">
         <form class="form" id="tweet-create-form" method="POST" action="/create-tweet">
             {% csrf_token %}
+            <div class="d-none alert alert-danger" id="tweet-create-form-error">
+                
+            </div>
             <input type="hidden" value="/" name="next" />
             <textarea class='form-control' name="content" placeholder="Your tweet.." required="required"></textarea>
             <button type="submit" class="btn btn-primary">Tweet</button>
@@ -29,6 +32,17 @@ Amazing tweet_clone!
 </div>
 
 <script>
+
+function handleTweetFormError(msg, display) {
+    var myError = document.getElementById('tweet-create-form-error')
+    if (display === true){
+        myError.setAttribute('class', 'd-block alert alert-danger')//remove classes 
+        myError.innerText = msg
+    }
+    else {
+        myError.setAttribute('class', 'd-none alert alert-danger')//remove classes 
+    }
+}
 
 function handleTweetCreateFormDidSubmit(event) {
     event.preventDefault()
@@ -45,21 +59,35 @@ function handleTweetCreateFormDidSubmit(event) {
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")//this header means that request is AJAX form
     xhr.onload = function() {
         if (xhr.status === 201){
+            handleTweetFormError("", false) //necessary for remove previus error alert
             const serverResponse = xhr.response //server sends serialized tweet object
             //dont reload entire page - just render new tweet 
             // newTweetJson = JSON.parse(serverResponse) //it is necessary cuz i dont set xhr.responseType = "json"
             newTweetJson = serverResponse
             const newTweetElement = formatTweetElement(newTweetJson)
-            console.log(newTweetElement)
             const ogHtml = tweetsContainerElement.innerHTML //twetsContainerElement contain all tweets from our page
             tweetsContainerElement.innerHTML = newTweetElement + ogHtml
             myForm.reset() //clear new tweet form
         }
         else if (xhr.status === 400){
             const errorJson = xhr.response
+            const contentError = errorJson.content // .content is related to field 'content' of TweetForm
+            let contentErrorMsg;
+            if (contentError) {
+                contentErrorMsg = contentError[0]
+                if (contentErrorMsg) {
+                    handleTweetFormError(contentErrorMsg, true)
+                }
+                else {
+                    alert("Error occured. Try again please")
+                }
+            }
+            else {
+                alert("Error occured. Try again please")
+            }
         }
         else if (xhr.status === 500){
-            alert("There was a swerver error.")
+            alert("There was a server error.")
         }
     }
     xhr.onerror = function() {
