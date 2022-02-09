@@ -26,6 +26,7 @@ SECRET_KEY = '3%1a6km&+!%(l0e9vf6!h#qlii4v2el(9y@xk9pgufx=p$&)q1'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.mydomain.com'] #used for django.utils.http.is_safe_url()
+LOGIN_URL = "/login"
 
 
 # Application definition
