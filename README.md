@@ -3,12 +3,13 @@ i want to build some tweeter like app with django at backend
 
 it is my todo list:
 1. Tweets
-	- Creating
-		- text
-		- image
-	- Delete
-	- Retweeting
-    - Liking
+    -User permissions
+        - Creating
+            - text
+            - image
+        - Delete
+        - Retweeting
+        - Liking
 	
 2. Users
     - register
