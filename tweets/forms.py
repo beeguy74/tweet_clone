@@ -1,8 +1,7 @@
 from django import forms
 from .models import Tweet
+from tweet_clone.settings import MAX_TWEET_lENGTH
 
-
-MAX_TWEET_lENGTH = 240
 
 
 class TweetForm(forms.ModelForm):
