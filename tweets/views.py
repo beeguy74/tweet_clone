@@ -3,6 +3,9 @@ from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 from tweets.serializers import TweetSerializer
 
 from .forms import TweetForm
@@ -16,12 +19,21 @@ def home_view(request, *args, **kwargs):
 	return render(request, "pages/home.html", context={}, status=200)
 
 
+@api_view(['POST']) # http method the cloent === POST
 def tweet_create_view(request, *args, **kwargs):
-	serializer = TweetSerializer(data=request.POST or None)
-	if serializer.is_valid():
+	serializer = TweetSerializer(data=request.POST)
+	if serializer.is_valid(raise_exception=True): #send back what error is happen
 		serializer.save(user=request.user)
-		return JsonResponse(serializer.data, status=201) #.data contains dict representation of obj (Tweet)
-	return JsonResponse({}, status=400)
+		return Response(serializer.data, status=201) #.data contains dict representation of obj (Tweet)
+	return Response({}, status=400)
+
+
+
+@api_view(['GET']) # http method the cloent === GET
+def tweet_list_view(request, *args, **kwargs):
+	qs = Tweet.objects.all()
+	serializer = TweetSerializer(qs, many=True)
+	return Response(serializer.data)
 
 
 def tweet_create_view_pure_django(request, *args, **kwargs):
@@ -48,14 +60,12 @@ def tweet_create_view_pure_django(request, *args, **kwargs):
 	return render(request, 'components/forms.html', context={"form": form})
 
 
-def tweet_list_view(request, *args, **kwargs):
+def tweet_list_view_pure_django(request, *args, **kwargs):
 	"""
 	REST API VIEW
 	Consume by JS and more
 	return json data
 	"""
-
-
 	qs = Tweet.objects.all()
 	tweets_list = [x.serialize() for x in qs]
 	data = {
