@@ -47,6 +47,20 @@ def tweet_list_view(request, *args, **kwargs):
 	return Response(serializer.data) # respons - array itself, it s not multiple pages, so fix it in html
 
 
+@api_view(['DELETE', 'POST']) # http method the cloent === GET
+@permission_classes([IsAuthenticated])
+def tweet_delete_view(request, tweet_id, *args, **kwargs):
+	qs = Tweet.objects.filter(id=tweet_id)
+	if not qs.exists():
+		return Response({}, status=404)
+	qs = qs.filter(user=request.user)
+	if not qs.exists():
+		return Response({"message": "You cannot delete this tweet."}, status=401)
+	obj = qs.first()
+	obj.delete()
+	return Response({"message": "Tweet removed."}, status=200)
+
+
 def tweet_create_view_pure_django(request, *args, **kwargs):
 	user = request.user
 	if not request.user.is_authenticated:
