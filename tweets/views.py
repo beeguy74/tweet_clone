@@ -28,12 +28,21 @@ def tweet_create_view(request, *args, **kwargs):
 	return Response({}, status=400)
 
 
+@api_view(['GET']) # http method the cloent === GET
+def tweet_detail_view(request, tweet_id, *args, **kwargs):
+	qs = Tweet.objects.filter(id=tweet_id)
+	if not qs.exists():
+		return Response({}, status=404)
+	obj = qs.first()
+	serializer = TweetSerializer(obj)
+	return Response(serializer.data) # respons - array itself, it s not multiple pages, so fix it in html
+
 
 @api_view(['GET']) # http method the cloent === GET
 def tweet_list_view(request, *args, **kwargs):
 	qs = Tweet.objects.all()
 	serializer = TweetSerializer(qs, many=True)
-	return Response(serializer.data)
+	return Response(serializer.data) # respons - array itself, it s not multiple pages, so fix it in html
 
 
 def tweet_create_view_pure_django(request, *args, **kwargs):
@@ -75,7 +84,7 @@ def tweet_list_view_pure_django(request, *args, **kwargs):
 	return JsonResponse(data)
 
 
-def tweet_detail_view(request, tweet_id, *args, **kwargs):
+def tweet_detail_view_pure_django(request, tweet_id, *args, **kwargs):
 	"""
 	REST API VIEW
 	Consume by JS and more
